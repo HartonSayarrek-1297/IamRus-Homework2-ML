@@ -102,9 +102,9 @@ print("Тестовая выборка\n", headcrusher.round(3) )
 
 def linear_regression_manual_step(x_list, y_target, w, b, lr): # Функция считает регрессию для 1 экземляра (8 признаков + целевая переменная)
     y_pred = x_list @ w + b
-    loss = np.mean((y_pred - y_target)**2)
+    loss = (y_pred - y_target)**2
     
-    dw = -2 * np.mean(x_list * (y_target - y_pred))
+    dw = -2 * x_list * (y_target - y_pred)
     db = -2 * np.mean(y_target - y_pred)
 
     w -= dw * lr
@@ -131,19 +131,19 @@ def linregman_global(train_data, targets, epochs=100, type='Minibatch32'): # А 
     return list(map(list, zip(*loss_history))), w, b
 
 hist, w_res, b_res = linregman_global(X_train, y_train)
-hist1 = hist[0]
-hist2 = hist[1]
-hist3 = hist[15]
+
+N = 4
+indices = list(np.random.choice(32, size=N, replace=False))
 
 plt.figure(figsize=(9, 5))
-plt.plot(hist1, color='blue', linewidth=2)
-plt.plot(hist2, color='red', linewidth=2)
-plt.plot(hist3, color='green', linewidth=2)
+for i in indices:
+    plt.plot(hist[i], linewidth=2, label=f'Обучение на экземпляре {i}')
 plt.xlabel("Эпоха")
 plt.ylabel("MSE")
 plt.title("Ручной GD: кривая обучения")
 plt.yscale('log')
 plt.grid(True, alpha=0.3)
+plt.legend()
 plt.show()
 
 
